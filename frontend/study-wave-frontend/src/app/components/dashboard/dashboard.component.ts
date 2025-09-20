@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+// Dashboard component for user and instructor views
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
