@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: study-wave-backend
+
+  profiles:
+    active: dev
+
+jwt:
+  secret: ${JWT_SECRET:dev-secret}
+  expiration: 86400000
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
+
+logging:
+  level:
+    com.studywave: DEBUG
+    org.springframework.security: DEBUG
