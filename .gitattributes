@@ -1,0 +1,2 @@
+# Treat docs as documentation (not code). All source code counts toward language stats.
+*.md linguist-documentation

@@ -1,0 +1,40 @@
+# General
+.DS_Store
+Thumbs.db
+*.log
+*.lock
+.env
+.env.*
+
+# IDEs and editors
+.vscode/
+.idea/
+*.iml
+
+# Maven / Java
+backend/target/
+**/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Spring Boot
+backend/*.jar
+backend/*.war
+
+# Node / Angular
+frontend/study-wave-frontend/node_modules/
+frontend/study-wave-frontend/dist/
+frontend/study-wave-frontend/.angular/
+frontend/study-wave-frontend/.cache/
+
+# Coverage and test outputs
+coverage/
+**/coverage/
+**/.nyc_output/
+
+# OS specific
+ehthumbs.db
+Desktop.ini
+
+# Misc
+*.swp
+*.swo
