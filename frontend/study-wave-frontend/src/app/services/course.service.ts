@@ -46,4 +46,8 @@ export class CourseService {
   searchCourses(query: string): Observable<Course[]> {
     return this.http.get<Course[]>(`${this.API_URL}/search?q=${query}`);
   }
+
+  getInstructorCourses(): Observable<Course[]> {
+    return this.http.get<Course[]>(`${this.API_URL}/instructor`);
+  }
 }

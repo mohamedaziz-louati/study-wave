@@ -19,6 +19,10 @@ export class EnrollmentService {
     return this.http.get<Enrollment[]>(`${this.API_URL}/user/${userId}`);
   }
 
+  getUserEnrollments(): Observable<Enrollment[]> {
+    return this.http.get<Enrollment[]>(`${this.API_URL}/user`);
+  }
+
   getEnrollmentsByCourse(courseId: number): Observable<Enrollment[]> {
     return this.http.get<Enrollment[]>(`${this.API_URL}/course/${courseId}`);
   }
