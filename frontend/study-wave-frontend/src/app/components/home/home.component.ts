@@ -82,7 +82,7 @@ import { Course } from '../../models/course.model';
             <p class="course-description">{{ course.description | slice:0:100 }}...</p>
             <div class="course-meta">
               <span class="course-level">{{ course.level }}</span>
-              <span class="course-price">${{ course.price }}</span>
+              <span class="course-price">\${{ course.price }}</span>
             </div>
           </mat-card-content>
           <mat-card-actions>

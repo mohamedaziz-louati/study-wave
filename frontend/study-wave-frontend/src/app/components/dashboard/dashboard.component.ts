@@ -90,7 +90,7 @@ import { Enrollment } from '../../models/enrollment.model';
                       <p class="course-description">{{ enrollment.course.description | slice:0:100 }}...</p>
                       <div class="course-meta">
                         <span class="course-level">{{ enrollment.course.level }}</span>
-                        <span class="course-price">${{ enrollment.course.price }}</span>
+                        <span class="course-price">\${{ enrollment.course.price }}</span>
                       </div>
                       <div class="course-progress" *ngIf="enrollment.status === 'IN_PROGRESS'">
                         <div class="progress-bar">
@@ -635,12 +635,12 @@ export class DashboardComponent implements OnInit {
 
   private loadStudentData() {
     this.enrollmentService.getUserEnrollments().subscribe({
-      next: (enrollments) => {
+      next: (enrollments: Enrollment[]) => {
         this.enrolledCourses = enrollments;
-        this.completedCourses = enrollments.filter(e => e.status === 'COMPLETED');
-        this.inProgressCourses = enrollments.filter(e => e.status === 'IN_PROGRESS');
+        this.completedCourses = enrollments.filter((e: Enrollment) => e.status === 'COMPLETED');
+        this.inProgressCourses = enrollments.filter((e: Enrollment) => e.status === 'IN_PROGRESS');
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading enrollments:', error);
       }
     });
@@ -648,10 +648,10 @@ export class DashboardComponent implements OnInit {
 
   private loadInstructorData() {
     this.courseService.getInstructorCourses().subscribe({
-      next: (courses) => {
+      next: (courses: Course[]) => {
         this.myCourses = courses;
-        this.publishedCourses = courses.filter(c => c.status === 'PUBLISHED').length;
-        this.totalStudents = courses.reduce((total, course) => total + (course.enrolledStudents?.length || 0), 0);
+        this.publishedCourses = courses.filter((c: Course) => c.status === 'PUBLISHED').length;
+        this.totalStudents = courses.reduce((total: number, course: Course) => total + (course.enrolledStudents?.length || 0), 0);
       },
       error: (error) => {
         console.error('Error loading instructor courses:', error);
