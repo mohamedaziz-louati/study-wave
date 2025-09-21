@@ -4,6 +4,7 @@ import com.studywave.model.Course;
 import com.studywave.model.User;
 import com.studywave.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -124,7 +125,7 @@ public class CourseController {
                 Course updatedCourse = courseService.updateCourse(course);
                 return ResponseEntity.ok(updatedCourse);
             } else {
-                return ResponseEntity.forbidden().build();
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
         }
         return ResponseEntity.notFound().build();
@@ -141,7 +142,7 @@ public class CourseController {
                 courseService.deleteCourse(id);
                 return ResponseEntity.ok().build();
             } else {
-                return ResponseEntity.forbidden().build();
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
         }
         return ResponseEntity.notFound().build();

@@ -22,6 +22,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.http.HttpMethod;
+import com.studywave.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
