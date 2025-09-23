@@ -1,6 +1,7 @@
 package com.studywave.config;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -11,20 +12,19 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.http.HttpStatus;
-
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler
-    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers,
-                                                                  HttpStatus status,
-                                                                  WebRequest request) {
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                   HttpHeaders headers,
+                                                                   HttpStatusCode status,
+                                                                   WebRequest request) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", Instant.now().toString());
         body.put("status", HttpStatus.BAD_REQUEST.value());
@@ -58,10 +58,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneric(Exception ex) {
+        // Print stack trace so we can see the real runtime cause in logs.
+        ex.printStackTrace();
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", Instant.now().toString());
         body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         body.put("message", "Unexpected error");
+        body.put("exception", ex.getClass().getName());
+        body.put("error", ex.getMessage());
+        body.put(
+                "stackTrace",
+                Arrays.stream(ex.getStackTrace())
+                        .limit(25)
+                        .map(StackTraceElement::toString)
+                        .collect(Collectors.toList())
+        );
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -79,7 +79,9 @@ public class AuthController {
                 signUpRequest.getFirstName(),
                 signUpRequest.getLastName());
 
-        user.setRole(Role.STUDENT);
+        // Use role sent from frontend (Instructor/Student/Admin).
+        // Fallback to STUDENT for safety.
+        user.setRole(signUpRequest.getRole() != null ? signUpRequest.getRole() : Role.STUDENT);
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));

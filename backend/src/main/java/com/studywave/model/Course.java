@@ -1,5 +1,6 @@
 package com.studywave.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -27,7 +28,8 @@ public class Course {
     private String description;
     
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    // Eager-load instructor so JSON serialization has real values (not null proxies).
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "instructor_id", nullable = false)
     private User instructor;
     
@@ -63,12 +65,15 @@ public class Course {
     private Set<User> enrolledStudents;
     
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Enrollment> enrollments;
     
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Review> reviews;
     
-    @Column(precision = 3, scale = 2)
+    // Hibernate 6 disallows precision/scale annotations on floating-point types like Double.
+    // Keep it as Double without precision/scale.
     private Double averageRating;
     
     private Integer reviewCount;

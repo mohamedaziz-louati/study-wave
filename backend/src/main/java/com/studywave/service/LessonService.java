@@ -15,7 +15,7 @@ public class LessonService {
     private LessonRepository lessonRepository;
 
     public List<Lesson> getLessonsByCourse(Long courseId) {
-        return lessonRepository.findByCourseIdOrderByOrderAsc(courseId);
+        return lessonRepository.findByCourseIdOrderByOrderIndexAsc(courseId);
     }
 
     public Lesson createLesson(Lesson lesson) {
@@ -27,10 +27,9 @@ public class LessonService {
         if (existingLesson.isPresent()) {
             Lesson lessonToUpdate = existingLesson.get();
             lessonToUpdate.setTitle(lesson.getTitle());
-            lessonToUpdate.setDescription(lesson.getDescription());
             lessonToUpdate.setContent(lesson.getContent());
             lessonToUpdate.setType(lesson.getType());
-            lessonToUpdate.setOrder(lesson.getOrder());
+            lessonToUpdate.setOrderIndex(lesson.getOrderIndex());
             lessonToUpdate.setDuration(lesson.getDuration());
             return lessonRepository.save(lessonToUpdate);
         }

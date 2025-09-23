@@ -15,12 +15,14 @@ public class Enrollment {
     private Long id;
     
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    // Eager-load to ensure JSON responses include course details.
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    // Eager-load to ensure JSON responses include course details.
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
     

@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   application:
@@ -9,7 +9,9 @@ spring:
     active: dev
 
 jwt:
-  secret: ${JWT_SECRET:dev-secret}
+  # JJWT HS256 requires a key size >= 256 bits (>=32 bytes).
+  # Use a longer default so the app runs out-of-the-box.
+  secret: ${JWT_SECRET:dev-secret-dev-secret-dev-secret-dev-secret}
   expiration: 86400000
 
 app:

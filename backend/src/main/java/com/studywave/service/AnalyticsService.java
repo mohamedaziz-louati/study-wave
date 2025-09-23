@@ -54,12 +54,14 @@ public class AnalyticsService {
         return courseRepository.findByStatus(CourseStatus.PUBLISHED, PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "averageRating")))
                 .getContent()
                 .stream()
-                .map(c -> Map.of(
-                        "id", c.getId(),
-                        "title", c.getTitle(),
-                        "averageRating", c.getAverageRating(),
-                        "reviewCount", c.getReviewCount()
-                ))
+                .map(c -> {
+                    Map<String, Object> m = new LinkedHashMap<>();
+                    m.put("id", c.getId());
+                    m.put("title", c.getTitle());
+                    m.put("averageRating", c.getAverageRating());
+                    m.put("reviewCount", c.getReviewCount());
+                    return m;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -70,7 +72,12 @@ public class AnalyticsService {
                 .collect(Collectors.groupingBy(Course::getCategory, Collectors.counting()));
         return counts.entrySet().stream()
                 .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-                .map(e -> Map.of("category", e.getKey(), "count", e.getValue()))
+                .map(e -> {
+                    Map<String, Object> m = new LinkedHashMap<>();
+                    m.put("category", e.getKey());
+                    m.put("count", e.getValue());
+                    return m;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -78,8 +85,8 @@ public class AnalyticsService {
         LocalDateTime since = LocalDateTime.now().minusDays(days);
         List<Enrollment> all = enrollmentRepository.findAll();
         return all.stream()
-                .filter(en -> en.getCreatedAt() != null && en.getCreatedAt().isAfter(since))
-                .collect(Collectors.groupingBy(en -> en.getCreatedAt().toLocalDate(), TreeMap::new, Collectors.counting()));
+                .filter(en -> en.getEnrolledAt() != null && en.getEnrolledAt().isAfter(since))
+                .collect(Collectors.groupingBy(en -> en.getEnrolledAt().toLocalDate(), TreeMap::new, Collectors.counting()));
     }
 
     public Map<LocalDate, Long> reviewsByDay(int days) {
