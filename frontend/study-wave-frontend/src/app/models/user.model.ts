@@ -29,10 +29,14 @@ export interface SignupRequest {
   password: string;
   firstName: string;
   lastName: string;
+  role: Role;
 }
 
 export interface JwtResponse {
-  token: string;
+  // Backend (JwtResponse) uses `getAccessToken()` -> serialized as `accessToken`
+  accessToken: string;
+  // Keep `token` optional for compatibility if backend response changes.
+  token?: string;
   id: number;
   username: string;
   email: string;

@@ -68,7 +68,8 @@ import { Router } from '@angular/router';
     .navbar {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
-      padding: 1rem 0;
+      padding: 0;
+      height: 64px;
       position: fixed;
       top: 0;
       width: 100%;
@@ -83,6 +84,7 @@ import { Router } from '@angular/router';
       display: flex;
       justify-content: space-between;
       align-items: center;
+      height: 64px;
     }
 
     .nav-brand {
@@ -101,6 +103,7 @@ import { Router } from '@angular/router';
       display: flex;
       align-items: center;
       gap: 30px;
+      height: 64px;
     }
 
     .nav-link {
@@ -109,6 +112,11 @@ import { Router } from '@angular/router';
       padding: 8px 16px;
       border-radius: 20px;
       transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      line-height: 1;
     }
 
     .nav-link:hover,
@@ -172,8 +180,8 @@ import { Router } from '@angular/router';
     }
 
     main {
-      padding-top: 80px;
-      min-height: calc(100vh - 80px);
+      padding-top: 64px;
+      min-height: calc(100vh - 64px);
     }
 
     @media (max-width: 768px) {

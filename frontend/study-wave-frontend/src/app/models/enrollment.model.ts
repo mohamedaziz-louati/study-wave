@@ -14,6 +14,5 @@ export interface Enrollment {
 export enum EnrollmentStatus {
   ACTIVE = 'ACTIVE',
   COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
-  IN_PROGRESS = 'IN_PROGRESS'
+  SUSPENDED = 'SUSPENDED'
 }

@@ -7,7 +7,8 @@ import { User, LoginRequest, SignupRequest, JwtResponse, Role } from '../models/
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = 'http://localhost:8080/api/auth';
+  // Use relative URL so the Angular dev-server proxy can route to the backend.
+  private readonly API_URL = '/api/auth';
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -19,14 +20,20 @@ export class AuthService {
     return this.http.post<JwtResponse>(`${this.API_URL}/signin`, loginRequest)
       .pipe(
         tap(response => {
-          localStorage.setItem('token', response.token);
+          const token = response.accessToken ?? response.token ?? '';
+          localStorage.setItem('token', token);
+          // Backend returns roles like "ROLE_STUDENT". Strip the prefix to match our Role enum values.
+          const normalizedRoles = (response.roles ?? []).map(r =>
+            r?.startsWith('ROLE_') ? r.slice('ROLE_'.length) : r
+          );
+          const role = (normalizedRoles.find(r => Object.values(Role).includes(r as Role)) ?? Role.STUDENT) as Role;
           const user: User = {
             id: response.id,
             username: response.username,
             email: response.email,
             firstName: response.firstName,
             lastName: response.lastName,
-            role: response.roles[0] as Role,
+            role,
             createdAt: '',
             updatedAt: ''
           };

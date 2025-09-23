@@ -79,27 +79,36 @@ import { Enrollment } from '../../models/enrollment.model';
                 <div class="courses-grid" *ngIf="enrolledCourses.length > 0; else noCourses">
                   <div *ngFor="let enrollment of enrolledCourses" class="course-card enrolled">
                     <div class="course-image">
-                      <img [src]="enrollment.course.thumbnailUrl || 'assets/images/course-placeholder.jpg'" 
-                           [alt]="enrollment.course.title">
+                      <img
+                        [src]="enrollment.course?.thumbnailUrl || 'assets/images/course-placeholder.jpg'"
+                        [alt]="enrollment.course?.title || 'Course'"
+                      >
                       <div class="course-badge" [ngClass]="enrollment.status.toLowerCase()">
                         {{ enrollment.status }}
                       </div>
                     </div>
                     <div class="course-content">
-                      <h3 class="course-title">{{ enrollment.course.title }}</h3>
-                      <p class="course-description">{{ enrollment.course.description | slice:0:100 }}...</p>
+                      <h3 class="course-title">{{ enrollment.course?.title || 'Course' }}</h3>
+                      <p class="course-description">
+                        {{ enrollment.course?.description | slice:0:100 }}...
+                      </p>
                       <div class="course-meta">
-                        <span class="course-level">{{ enrollment.course.level }}</span>
-                        <span class="course-price">\${{ enrollment.course.price }}</span>
+                        <span class="course-level">{{ enrollment.course?.level || '' }}</span>
+                        <span class="course-price">\${{ enrollment.course?.price }}</span>
                       </div>
-                      <div class="course-progress" *ngIf="enrollment.status === 'IN_PROGRESS'">
+                      <div class="course-progress" *ngIf="enrollment.status === 'ACTIVE'">
                         <div class="progress-bar">
                           <div class="progress-fill" [style.width.%]="getProgressPercentage(enrollment)"></div>
                         </div>
                         <span class="progress-text">{{ getProgressPercentage(enrollment) }}% Complete</span>
                       </div>
                       <div class="course-actions">
-                        <button mat-button color="primary" [routerLink]="['/courses', enrollment.course.id]">
+                        <button
+                          mat-button
+                          color="primary"
+                          *ngIf="enrollment.course?.id"
+                          [routerLink]="['/courses', enrollment.course.id]"
+                        >
                           Continue Learning
                         </button>
                       </div>
@@ -638,7 +647,7 @@ export class DashboardComponent implements OnInit {
       next: (enrollments: Enrollment[]) => {
         this.enrolledCourses = enrollments;
         this.completedCourses = enrollments.filter((e: Enrollment) => e.status === 'COMPLETED');
-        this.inProgressCourses = enrollments.filter((e: Enrollment) => e.status === 'IN_PROGRESS');
+        this.inProgressCourses = enrollments.filter((e: Enrollment) => e.status === 'ACTIVE');
       },
       error: (error: any) => {
         console.error('Error loading enrollments:', error);

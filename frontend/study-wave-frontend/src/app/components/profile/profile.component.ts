@@ -7,7 +7,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
+import { EnrollmentService } from '../../services/enrollment.service';
+import { CourseService } from '../../services/course.service';
 import { User } from '../../models/user.model';
+import { EnrollmentStatus } from '../../models/enrollment.model';
+import { CourseStatus } from '../../models/course.model';
 
 @Component({
   selector: 'app-profile',
@@ -40,15 +44,15 @@ import { User } from '../../models/user.model';
             <p class="profile-email">{{ currentUser?.email }}</p>
             <div class="profile-stats">
               <div class="stat">
-                <span class="stat-number">12</span>
+                <span class="stat-number">{{ coursesCount }}</span>
                 <span class="stat-label">Courses</span>
               </div>
               <div class="stat">
-                <span class="stat-number">8</span>
+                <span class="stat-number">{{ completedCount }}</span>
                 <span class="stat-label">Completed</span>
               </div>
               <div class="stat">
-                <span class="stat-number">4</span>
+                <span class="stat-number">{{ inProgressCount }}</span>
                 <span class="stat-label">In Progress</span>
               </div>
             </div>
@@ -628,9 +632,14 @@ export class ProfileComponent implements OnInit {
   currentUser: User | null = null;
   profileForm: FormGroup;
   editMode = false;
+  coursesCount = 0;
+  completedCount = 0;
+  inProgressCount = 0;
 
   constructor(
     private authService: AuthService,
+    private enrollmentService: EnrollmentService,
+    private courseService: CourseService,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar
   ) {
@@ -653,7 +662,40 @@ export class ProfileComponent implements OnInit {
         bio: this.currentUser.bio || '',
         location: this.currentUser.location || ''
       });
+
+      this.loadStats();
     }
+  }
+
+  private loadStats(): void {
+    if (!this.currentUser) return;
+
+    // Student stats: enrollment statuses.
+    if (this.currentUser.role === 'STUDENT') {
+      this.enrollmentService.getUserEnrollments().subscribe({
+        next: (enrollments) => {
+          this.coursesCount = enrollments.length;
+          this.completedCount = enrollments.filter(e => e.status === EnrollmentStatus.COMPLETED).length;
+          this.inProgressCount = enrollments.filter(e => e.status === EnrollmentStatus.ACTIVE).length;
+        },
+        error: (error) => {
+          console.error('Error loading profile stats:', error);
+        }
+      });
+      return;
+    }
+
+    // Instructor/admin stats: course statuses.
+    this.courseService.getInstructorCourses().subscribe({
+      next: (courses) => {
+        this.coursesCount = courses.length;
+        this.completedCount = courses.filter(c => c.status === CourseStatus.ARCHIVED).length;
+        this.inProgressCount = courses.filter(c => c.status !== CourseStatus.ARCHIVED).length;
+      },
+      error: (error) => {
+        console.error('Error loading profile stats:', error);
+      }
+    });
   }
 
   getUserName(): string {

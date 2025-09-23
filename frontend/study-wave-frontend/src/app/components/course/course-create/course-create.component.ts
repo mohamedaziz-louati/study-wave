@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatChipsModule } from '@angular/material/chips';
 import { CourseService } from '../../../services/course.service';
 import { AuthService } from '../../../services/auth.service';
 import { Course, CourseLevel, CourseStatus } from '../../../models/course.model';
@@ -27,6 +28,7 @@ import { Course, CourseLevel, CourseStatus } from '../../../models/course.model'
     MatIconModule,
     MatSelectModule,
     MatSnackBarModule,
+    MatChipsModule,
     MatStepperModule
   ],
   template: `
@@ -41,7 +43,7 @@ import { Course, CourseLevel, CourseStatus } from '../../../models/course.model'
           <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" class="course-form">
             <mat-stepper #stepper>
               <!-- Step 1: Basic Information -->
-              <mat-step [stepControl]="courseForm.get('basicInfo')" label="Basic Information">
+              <mat-step [stepControl]="courseForm.get('basicInfo')!" label="Basic Information">
                 <ng-template matStepContent>
                   <div formGroupName="basicInfo" class="step-content">
                     <mat-form-field appearance="outline" class="full-width">
@@ -117,7 +119,7 @@ import { Course, CourseLevel, CourseStatus } from '../../../models/course.model'
               </mat-step>
 
               <!-- Step 2: Course Content -->
-              <mat-step [stepControl]="courseForm.get('content')" label="Course Content">
+              <mat-step [stepControl]="courseForm.get('content')!" label="Course Content">
                 <ng-template matStepContent>
                   <div formGroupName="content" class="step-content">
                     <h3>Course Content Preview</h3>
@@ -167,7 +169,7 @@ import { Course, CourseLevel, CourseStatus } from '../../../models/course.model'
                               <p>{{ courseForm.get('basicInfo.description')?.value || 'Course description...' }}</p>
                               <div class="preview-meta">
                                 <mat-chip>{{ courseForm.get('basicInfo.level')?.value || 'Level' }}</mat-chip>
-                                <span class="preview-price">${{ courseForm.get('basicInfo.price')?.value || '0' }}</span>
+                                <span class="preview-price">\${{ courseForm.get('basicInfo.price')?.value || '0' }}</span>
                               </div>
                             </div>
                           </div>
@@ -186,7 +188,7 @@ import { Course, CourseLevel, CourseStatus } from '../../../models/course.model'
                           <strong>Level:</strong> {{ courseForm.get('basicInfo.level')?.value || 'Not specified' }}
                         </div>
                         <div class="detail-item">
-                          <strong>Price:</strong> ${{ courseForm.get('basicInfo.price')?.value || '0' }}
+                          <strong>Price:</strong> \${{ courseForm.get('basicInfo.price')?.value || '0' }}
                         </div>
                       </div>
                     </div>
@@ -422,13 +424,22 @@ export class CourseCreateComponent implements OnInit {
         title: this.courseForm.get('basicInfo.title')?.value,
         description: this.courseForm.get('basicInfo.description')?.value,
         category: this.courseForm.get('basicInfo.category')?.value,
-        duration: this.courseForm.get('basicInfo.duration')?.value ? +this.courseForm.get('basicInfo.duration')?.value : null,
+        duration: this.courseForm.get('basicInfo.duration')?.value
+          ? +this.courseForm.get('basicInfo.duration')?.value
+          : undefined,
         level: this.courseForm.get('basicInfo.level')?.value,
         price: +this.courseForm.get('basicInfo.price')?.value,
         thumbnailUrl: this.courseForm.get('basicInfo.thumbnailUrl')?.value,
         status: this.courseForm.get('status')?.value,
         instructor: {
-          id: currentUser.id
+          id: currentUser.id,
+          username: currentUser.username,
+          email: currentUser.email,
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName,
+          role: currentUser.role,
+          createdAt: currentUser.createdAt,
+          updatedAt: currentUser.updatedAt
         }
       };
 

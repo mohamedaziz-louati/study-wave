@@ -156,7 +156,7 @@ import { Course, CourseLevel, Lesson, LessonType } from '../../../models/course.
                         </p>
                         <div class="instructor-stats">
                           <div class="stat">
-                            <span class="stat-number">{{ course.instructor.createdCourses?.length || 0 }}</span>
+                            <span class="stat-number">0</span>
                             <span class="stat-label">Courses</span>
                           </div>
                           <div class="stat">
@@ -178,7 +178,7 @@ import { Course, CourseLevel, Lesson, LessonType } from '../../../models/course.
           <mat-card class="enrollment-card">
             <mat-card-content>
               <div class="price-section">
-                <span class="course-price">${{ course.price }}</span>
+                <span class="course-price">\${{ course.price }}</span>
                 <span class="price-label">One-time payment</span>
               </div>
               
@@ -651,7 +651,7 @@ export class CourseDetailComponent implements OnInit {
     private router: Router,
     private courseService: CourseService,
     private enrollmentService: EnrollmentService,
-    private authService: AuthService,
+    public authService: AuthService,
     private snackBar: MatSnackBar
   ) { }
 
@@ -680,7 +680,8 @@ export class CourseDetailComponent implements OnInit {
   }
 
   private checkEnrollmentStatus() {
-    if (this.course && this.authService.isAuthenticated()) {
+    const user = this.authService.getCurrentUser();
+    if (this.course && user?.role === 'STUDENT') {
       this.enrollmentService.isEnrolled(this.course.id).subscribe({
         next: (enrolled) => {
           this.isEnrolled = enrolled;

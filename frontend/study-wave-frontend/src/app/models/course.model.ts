@@ -57,10 +57,11 @@ export interface Enrollment {
   status: EnrollmentStatus;
   enrolledAt: string;
   completedAt?: string;
+  progress?: number;
 }
 
 export enum EnrollmentStatus {
   ACTIVE = 'ACTIVE',
   COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED'
+  SUSPENDED = 'SUSPENDED'
 }

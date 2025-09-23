@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
 import { CourseService } from '../../../services/course.service';
 import { Course, CourseLevel, CourseStatus } from '../../../models/course.model';
 
@@ -27,7 +28,8 @@ import { Course, CourseLevel, CourseStatus } from '../../../models/course.model'
     MatFormFieldModule,
     MatSelectModule,
     MatChipsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatMenuModule
   ],
   template: `
     <div class="course-list-container">
@@ -126,7 +128,7 @@ import { Course, CourseLevel, CourseStatus } from '../../../models/course.model'
                 </div>
               </div>
               <div class="course-footer">
-                <span class="course-price">${{ course.price }}</span>
+                <span class="course-price">\${{ course.price }}</span>
                 <span class="course-category" *ngIf="course.category">{{ course.category }}</span>
               </div>
             </mat-card-content>

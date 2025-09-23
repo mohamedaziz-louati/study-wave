@@ -84,7 +84,7 @@ import { SignupRequest } from '../../../models/user.model';
               </div>
 
               <button type="submit" class="btn btn-primary btn-large full-width" 
-                      [disabled]="registerForm.invalid || isLoading">
+                      [disabled]="isLoading">
                 <mat-icon *ngIf="isLoading">refresh</mat-icon>
                 {{ isLoading ? 'Creating account...' : 'Create Account' }}
               </button>
@@ -387,7 +387,8 @@ export class RegisterComponent {
         lastName: this.registerForm.value.lastName,
         username: this.registerForm.value.username,
         email: this.registerForm.value.email,
-        password: this.registerForm.value.password
+        password: this.registerForm.value.password,
+        role: this.registerForm.value.role
       };
 
       this.authService.register(signupRequest).subscribe({
@@ -401,12 +402,23 @@ export class RegisterComponent {
         },
         error: (error) => {
           this.isLoading = false;
-          this.snackBar.open('Registration failed. Please try again.', 'Close', {
+          const backendMessage =
+            error?.error?.message ||
+            error?.message ||
+            'Registration failed. Please try again.';
+          this.snackBar.open(backendMessage, 'Close', {
             duration: 5000,
             panelClass: ['error-snackbar']
           });
           console.error('Registration error:', error);
         }
+      });
+    } else {
+      // If the user clicks but the form is invalid, show them why instead of silently doing nothing.
+      this.registerForm.markAllAsTouched();
+      this.snackBar.open('Please complete all required fields and confirm your password.', 'Close', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
       });
     }
   }
